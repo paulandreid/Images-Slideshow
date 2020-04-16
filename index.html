@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+#slideshow {
+  margin: 50px auto;
+  position: relative;
+  width: 900px;
+  height: 450px;
+  padding: 10px;
+}
+#slideshow > div {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+}
+#slideshow > div > img {
+  width: 100%;
+}
+#button {
+  margin-top: 170px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+  <p>Problema 9-Daraban Andrei 721</p>
+  Loop images: <input type="checkbox" id="myCheck">
+  <select id="timeSelect" name="time">
+    <option value="1000" selected="selected">1 secunde</option>
+    <option value="2000">2 secunde</option>
+    <option value="3000" >3 secunde</option>
+    <option value="5000" >5 secunde</option>
+    <option value="10000" >10 secunde</option>
+    </select>
+  <div id="slideshow">
+    <div>
+      <img name="slide" id="imgSlideshow" src="img1.jpg">
+    </div>
+  </div>
+  <div id="button">
+    <a href="#" id="prevBtn" >Prev</a>
+    <a href="#" id="startCycle" >Play</a>
+    <a href="#" id="stopCycle" >Pause</a>
+    <a href="#" id="nextBtn" >Next</a>
+    <a href="#" id="resetBtn" >Reset</a>
+  </div>
+  <div id="counter"></div>
+
+<script>
+  document.getElementById("prevBtn").addEventListener("click",previousImage);
+  document.getElementById("startCycle").addEventListener("click",setTimer);
+  document.getElementById("stopCycle").addEventListener("click",stopTimer);
+  document.getElementById("nextBtn").addEventListener("click",nextImage);
+  document.getElementById("resetBtn").addEventListener("click",reset);
+var imgNumber = 0;
+var path = ["img1.jpg",
+  "img2.jpg",
+  "img3.jpg",
+  "img4.jpg"
+];
+var numberOfImg = path.length;
+var timer = null;
+var e;
+
+ function slide() {
+
+  if(e!=document.getElementById("timeSelect").value){
+    setTimer();
+    return;
+  }
+
+  console.log(document.getElementById("myCheck").checked)
+  if(imgNumber<numberOfImg && !document.getElementById("myCheck").checked )
+  {
+  document.getElementById("imgSlideshow").src = path[imgNumber];
+  imgNumber++;
+  changeCounter(imgNumber, numberOfImg);
+    if(imgNumber==numberOfImg)
+    return true;}
+  else if(document.getElementById("myCheck").checked){
+    imgNumber = (imgNumber + 1) % path.length;
+  
+  document.getElementById("imgSlideshow").src = path[imgNumber];
+  changeCounter(imgNumber + 1, numberOfImg)
+  }
+  else 
+  return;}
+
+
+function setTimer() {
+  if(timer && timer!=document.getElementById("timeSelect").value){
+    clearInterval(timer);
+    e=document.getElementById("timeSelect").value;
+    timer = setInterval(slide, e);
+  }
+  else if (timer) {
+    clearInterval(timer);
+    timer = null;
+  } else {
+    
+    e=document.getElementById("timeSelect").value;
+    timer = setInterval(slide, e);
+  }
+  return false;
+}
+
+function stopTimer(){
+  clearInterval(timer);
+}
+
+
+
+function previousImage() {
+  --imgNumber;
+  if (imgNumber < 0) {
+    imgNumber = numberOfImg - 1;
+  }
+  document.getElementById("imgSlideshow").src = path[imgNumber];
+  changeCounter(imgNumber + 1, numberOfImg);
+  return false;
+}
+
+function nextImage() {
+
+    if(numberOfImg>imgNumber)
+    ++imgNumber;
+  console.log(imgNumber);
+  document.getElementById("imgSlideshow").src = path[imgNumber];
+  changeCounter(imgNumber + 1, numberOfImg);
+  return false;
+}
+
+function reset(){
+  imgNumber = 0;
+  document.getElementById("imgSlideshow").src = path[imgNumber];
+  changeCounter(imgNumber + 1, numberOfImg);
+}
+
+function changeCounter(cur, total) {
+  document.getElementById("counter").innerHTML = cur + "/" + total;
+}
+document.getElementById("counter").innerHTML = 1 + "/" + path.length;
+</script>
+
+</body>
